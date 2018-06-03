@@ -6,6 +6,6 @@
     注意：使用mapper代理开发时，namespace有特殊作用，namespace等于mapper接口地址  -->
 <mapper namespace="com.newbee.material.repo.dao.IUserDao">
     <select id="getUser" resultType="com.newbee.material.repo.domain.User">
-        select user_name username from users where user_name=#{userName}
+        select user_name username, password from users where user_name=#{userName}
     </select>
 </mapper>

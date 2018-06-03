@@ -52,6 +52,12 @@ public class AuthorizedInterceptor implements HandlerInterceptor {
 		String servletPath = request.getServletPath();
 		/** 判断请求是否需要拦截 */
 
+		if ("/login-page".equals(servletPath) && null != request.getSession()
+				.getAttribute(Constants.USER_SESSION)) {
+//			return false;
+			 request.getSession().removeAttribute(Constants.USER_SESSION);
+		}
+
 		/** 拦截请求 */
 		if (!shouldIgnore(servletPath)) {
 			/** 1.获取session中的用户 */

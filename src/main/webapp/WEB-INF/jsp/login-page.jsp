@@ -49,5 +49,9 @@
         $(".hidden").css('display', 'block');
     }
 </script>
+<script type="text/javascript">
+    window.history.forward();
+</script>
+
 </body>
 </html>
