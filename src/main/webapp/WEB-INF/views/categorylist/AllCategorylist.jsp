@@ -107,7 +107,13 @@
                         <a href="#" class="close" data-dismiss="alert">
                             &times;
                         </a>
-                        <strong>警告！</strong>
+                        <strong>输入参数不符合要求！</strong>
+                    </div>
+                    <div id="submit_failed_alert" class="alert alert-danger hide" aria-hidden="true">
+                        <a href="#" class="close" data-dismiss="alert">
+                            &times;
+                        </a>
+                        <strong>保存失败！</strong>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -220,6 +226,7 @@
             },
             error: function (xhr) {
                 console.log('failed');
+                $('#submit_failed_alert').removeClass('hide');
             }
         })
     });
@@ -231,12 +238,13 @@
 
     $('#add_code').focus(function () {
         $('#submit_alert').addClass('hide');
+        $('#submit_failed_alert').addClass('hide');
 
     });
 
     $('#add_name').focus(function () {
         $('#submit_alert').addClass('hide');
-
+        $('#submit_failed_alert').addClass('hide');
     })
 
 </script>
