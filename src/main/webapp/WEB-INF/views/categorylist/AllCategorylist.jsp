@@ -81,28 +81,40 @@
                 </div>
                 <div class="modal-body">
                     <form class="form" id="add_form">
-                        <form class="form-group">
+                        <div class="form-group">
                             <select class="form-control" id="add_select_level" name="add_select_level" required>
                                 <option value="1">一级</option>
                                 <option value="2">二级</option>
                             </select>
-                        </form>
+                        </div>
 
                         <%--<label for="add_code" class="control-label">编码:</label>--%>
                         <br/>
                         <br/>
-                        <input id="add_code" class="form-control" type='text' name="add_code" placeholder="编码" required/>
+                        <div class="form-group">
+                            <input id="add_code" class="form-control" type='text' name="add_code" placeholder="编码"
+                                   required/>
+                        </div>
 
                         <br/>
                         <br/>
-                        <input id="add_name" class="form-control" type='text'  name="add_name" placeholder="名称" required/>
+                        <div class="form-group">
+                            <input id="add_name" class="form-control" type='text' name="add_name" placeholder="名称"
+                                   required/>
+                        </div>
                     </form>
+                    <div id="submit_alert" class="alert alert-warning hide" aria-hidden="true">
+                        <a href="#" class="close" data-dismiss="alert">
+                            &times;
+                        </a>
+                        <strong>警告！</strong>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default"
                             data-dismiss="modal">关闭
                     </button>
-                    <button type="button" class="btn btn-primary">
+                    <button id="add_name_submit" type="button" class="btn btn-primary">
                         确定
                     </button>
                 </div>
@@ -151,6 +163,7 @@
     });
 
     $('#add_form').bootstrapValidator({
+        live: 'enabled',
         message: '输入的值不规范',
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
@@ -188,6 +201,42 @@
                 }
             }
         }
+    });
+
+    $('#add_name_submit').click(function () {
+        if(!$('#add_form').data('bootstrapValidator').isValid()) {
+            $('#submit_alert').removeClass('hide');
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "${pageContext.request.contextPath}/categorylist",
+            data: {
+                aa: 'hello'
+            },
+            success: function (resp) {
+                $('#add_modal').modal('hide');
+                resetModal();
+            },
+            error: function (xhr) {
+                console.log('failed');
+            }
+        })
+    });
+
+
+    var resetModal = function () {
+        $('#add_form').data('bootstrapValidator').resetForm(true);
+    }
+
+    $('#add_code').focus(function () {
+        $('#submit_alert').addClass('hide');
+
+    });
+
+    $('#add_name').focus(function () {
+        $('#submit_alert').addClass('hide');
+
     })
 
 </script>

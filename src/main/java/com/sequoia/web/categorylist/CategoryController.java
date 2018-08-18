@@ -31,4 +31,11 @@ public class CategoryController {
 		System.out.println(parameters);
 		return "";
 	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseBody
+	public String addCategory(@RequestBody String parameters) {
+		System.out.println(parameters);
+		return "";
+	}
 }

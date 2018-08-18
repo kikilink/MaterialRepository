@@ -9,16 +9,17 @@
 
     <mvc:annotation-driven/>
 
-    <context:component-scan base-package="com.sequoia.web" />
+    <context:component-scan base-package="com.sequoia.web"/>
 
 
-    <mvc:resources mapping="/js/**" location="/resources/js/" cache-period="#{60 * 60}" />
-    <mvc:resources mapping="/css/**" location="/resources/css/" cache-period="#{60 * 60}" />
-    <mvc:resources mapping="/vendor/**" location="/resources/vendor/" cache-period="#{60 * 60}" />
-    <mvc:resources mapping="/images/**" location="/resources/images/" cache-period="#{60 * 60}" />
-    <mvc:resources mapping="/jquery/**" location="/resources/vendor/jquery/" cache-period="#{60 * 60}" />
-    <mvc:resources mapping="/tablefilter/**" location="/resources/vendor/tablefilter/" cache-period="#{60 * 60}" />
-    <mvc:resources mapping="/chart/**" location="/resources/vendor/chart/" cache-period="#{60 * 60}" />
+    <mvc:resources mapping="/js/**" location="/resources/js/" cache-period="#{60 * 60}"/>
+    <mvc:resources mapping="/css/**" location="/resources/css/" cache-period="#{60 * 60}"/>
+    <mvc:resources mapping="/fonts/**" location="/resources/fonts/" cache-period="#{60 * 60}"/>
+    <mvc:resources mapping="/vendor/**" location="/resources/vendor/" cache-period="#{60 * 60}"/>
+    <mvc:resources mapping="/images/**" location="/resources/images/" cache-period="#{60 * 60}"/>
+    <mvc:resources mapping="/jquery/**" location="/resources/vendor/jquery/" cache-period="#{60 * 60}"/>
+    <mvc:resources mapping="/tablefilter/**" location="/resources/vendor/tablefilter/" cache-period="#{60 * 60}"/>
+    <mvc:resources mapping="/chart/**" location="/resources/vendor/chart/" cache-period="#{60 * 60}"/>
     <!--<mvc:default-servlet-handler />-->
 
 
