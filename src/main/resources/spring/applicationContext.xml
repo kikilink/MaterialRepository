@@ -20,7 +20,7 @@
 
     <context:property-placeholder location="classpath*:orm/*.properties" />
 
-    <context:component-scan base-package="com.youzan.pfcase" />
+    <context:component-scan base-package="com.sequoia" />
 
 
     <tx:annotation-driven />
@@ -42,19 +42,19 @@
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
-        <property name="typeAliasesPackage" value="com.youzan.pfcase.domain" />
+        <property name="typeAliasesPackage" value="com.sequoia.domain" />
         <property name="configLocation" value="classpath:orm/mybatis-config.xml"/>
-        <property name="mapperLocations" value="classpath:com.youzan.pfcase.mapper/*.xml" />
+        <property name="mapperLocations" value="classpath:com/sequoia/mapper/*.xml" />
     </bean>
 
     <!-- scan for mappers and let them be autowired -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.youzan.pfcase.mapper" />
+        <property name="basePackage" value="com.sequoia.mapper" />
     </bean>
 
 
     <bean id="passwordEncoder"
-          class="com.youzan.pfcase.util.DefaultPasswordEncoder">
+          class="com.sequoia.util.DefaultPasswordEncoder">
     </bean>
 
     <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">

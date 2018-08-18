@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.youzan</groupId>
-    <artifactId>pfcase</artifactId>
+    <groupId>com.sequoia</groupId>
+    <artifactId>material-repository</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>pfcase</name>
+    <name>material-repository</name>
 
 
     
@@ -351,7 +351,7 @@
 
 
     <build>
-        <finalName>pfcase</finalName>
+        <finalName>material.repository</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
