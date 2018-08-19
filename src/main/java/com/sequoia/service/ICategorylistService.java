@@ -8,7 +8,5 @@ public interface ICategorylistService {
 
     List<Category> getAllCategorylist();
 
-    List<Category> getFirstlevelCategorylist();
-
     void addCategory(Category category);
 }

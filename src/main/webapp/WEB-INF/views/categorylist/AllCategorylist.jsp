@@ -203,6 +203,12 @@
                     regexp: {
                         regexp: /^[0-9]+$/,
                         message: '编码只能是数字'
+                    },
+                    callback:{
+                        message:"编码已存在",
+                        callback:function (value, validator, $field) {
+                            return allCodes.indexOf(parseInt(value)) < 0;
+                        }
                     }
                 }
             },
@@ -247,7 +253,8 @@
             data: JSON.stringify({
                 level: $('#add_select_level').val(),
                 code: $('#add_code').val(),
-                name: $('#add_name').val()
+                name: $('#add_name').val(),
+                parentCode:$('#add_parent_code').val().split('-')[0]
             }),
             success: function (resp) {
                 $('#add_modal').modal('hide');
@@ -282,16 +289,20 @@
         $('#submit_failed_alert').addClass('hide');
     });
 
-    var parentCodeAndName = []
+    var parentCodeAndName = [];
+    var allCodes = [];
     $.ajax({
         type: "GET",
-        url: "${pageContext.request.contextPath}/categorylist/firstlevel",
+        url: "${pageContext.request.contextPath}/categorylist/allcategory",
         contentType: "application/json",
         success: function (data) {
             if(null != data) {
 
                 data.forEach(function(obj, index){
-                    parentCodeAndName.push(obj.code + '-' + obj.name);
+                    if(obj.level == 1) {
+                        parentCodeAndName.push(obj.code + '-' + obj.name);
+                    }
+                    allCodes.push(obj.code);
                 })
 
             }
