@@ -1,7 +1,9 @@
 package com.sequoia.web.categorylist;
 
+import com.sequoia.domain.Category;
 import com.sequoia.service.ICategorylistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,10 +34,10 @@ public class CategoryController {
 		return "";
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String addCategory(@RequestBody String parameters) {
-		System.out.println(parameters);
-		return "";
+	public String addCategory(@RequestBody Category category) throws Exception {
+		categorylistService.addCategory(category);
+		return "success.";
 	}
 }

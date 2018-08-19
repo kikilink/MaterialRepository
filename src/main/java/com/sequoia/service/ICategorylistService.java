@@ -7,4 +7,6 @@ import java.util.List;
 public interface ICategorylistService {
 
     List<Category> getAllCategorylist();
+
+    void addCategory(Category category);
 }

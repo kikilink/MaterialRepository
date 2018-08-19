@@ -22,6 +22,26 @@
         SELECT * from category where status = 1
     </select>
 
+    <insert id="addCategory">
+        INSERT INTO category(code,
+        name,
+        LEVEL,
+         creator,
+         creation_date,
+         lastupdator,
+         lastupdate_date
+         )
+        VALUES (
+        #{vo.code,jdbcType=NUMERIC},
+        #{vo.name,jdbcType=VARCHAR},
+        #{vo.level,jdbcType=NUMERIC},
+        #{vo.creator,jdbcType=VARCHAR},
+        sysdate(),
+        #{vo.lastUpdator,jdbcType=VARCHAR},
+        sysdate()
+        );
+    </insert>
+
     <select id="getAllCaselist" resultType="Caselist">
         SELECT
         *

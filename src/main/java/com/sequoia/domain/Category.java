@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Category implements Serializable {
-    private int id;
+    private Integer id;
 
-    private String code;
+    private Integer code;
 
     private String name;
 
     private String parentCode;
 
-    private int level;
+    private Integer level;
 
-    private int status;
+    private Integer status;
 
     private String creator;
 
@@ -24,19 +24,19 @@ public class Category implements Serializable {
 
     private Date lastupdateDate;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
@@ -56,19 +56,19 @@ public class Category implements Serializable {
         this.parentCode = parentCode;
     }
 
-    public int getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

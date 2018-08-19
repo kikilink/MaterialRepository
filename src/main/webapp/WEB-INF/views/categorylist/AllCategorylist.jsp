@@ -163,11 +163,17 @@
         locale: 'zh-CN'//中文支持,
     });
 
+    /**
+     * 重置查询条件
+     */
     $('#btn_reset').click(function () {
         $('#query_condition input').val('');
         $('#query_condition select').val(0);
     });
 
+    /**
+     * 表单校验
+     */
     $('#add_form').bootstrapValidator({
         live: 'enabled',
         message: '输入的值不规范',
@@ -209,17 +215,23 @@
         }
     });
 
+    /**
+     * 提交前做校验
+     */
     $('#add_name_submit').click(function () {
-        if(!$('#add_form').data('bootstrapValidator').isValid()) {
+        if (!$('#add_form').data('bootstrapValidator').isValid()) {
             $('#submit_alert').removeClass('hide');
             return;
         }
         $.ajax({
             type: "POST",
             url: "${pageContext.request.contextPath}/categorylist",
-            data: {
-                aa: 'hello'
-            },
+            contentType: "application/json",
+            data: JSON.stringify({
+                level: $('#add_select_level').val(),
+                code: $('#add_code').val(),
+                name: $('#add_name').val()
+            }),
             success: function (resp) {
                 $('#add_modal').modal('hide');
                 resetModal();
@@ -236,12 +248,18 @@
         $('#add_form').data('bootstrapValidator').resetForm(true);
     }
 
+    /**
+     * 用户开始输入，去掉警告
+     */
     $('#add_code').focus(function () {
         $('#submit_alert').addClass('hide');
         $('#submit_failed_alert').addClass('hide');
 
     });
 
+    /**
+     * 用户开始输入，去掉警告
+     */
     $('#add_name').focus(function () {
         $('#submit_alert').addClass('hide');
         $('#submit_failed_alert').addClass('hide');
