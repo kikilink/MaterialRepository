@@ -13,6 +13,8 @@ public interface CategorylistMapper {
 
 	List<Category> getAllCategorylist();
 
+	List<Category> getFirstLevelCategorylist();
+
 	PageResult<Category> getPagedCategorylist(PageVO pageVO);
 
 	int addCategory(@Param("vo") Category category);

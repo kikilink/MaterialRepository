@@ -1,7 +1,9 @@
 package com.sequoia.web.categorylist;
 
 import com.sequoia.domain.Category;
+import com.sequoia.domain.CategoryVO;
 import com.sequoia.service.ICategorylistService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("categorylist")
@@ -25,6 +29,12 @@ public class CategoryController {
 				categorylistService.getAllCategorylist());
 
 		return "categorylist/AllCategorylist";
+	}
+
+	@RequestMapping(value = "firstlevel", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Category> getFirstLevelCategorylist() {
+		return categorylistService.getFirstlevelCategorylist();
 	}
 
 	@RequestMapping(value = "page", method = RequestMethod.POST)

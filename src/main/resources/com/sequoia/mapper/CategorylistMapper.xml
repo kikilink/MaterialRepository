@@ -22,6 +22,10 @@
         SELECT * from category where status = 1
     </select>
 
+    <select id="getFirstLevelCategorylist" resultMap="categorylistMap">
+        SELECT * from category where status = 1 and level = 1
+    </select>
+
     <insert id="addCategory">
         INSERT INTO category(code,
         name,

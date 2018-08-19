@@ -21,6 +21,11 @@ public class CategorylistService implements ICategorylistService {
 	}
 
 	@Override
+	public List<Category> getFirstlevelCategorylist() {
+		return mapper.getFirstLevelCategorylist();
+	}
+
+	@Override
 	public void addCategory(Category category) {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();

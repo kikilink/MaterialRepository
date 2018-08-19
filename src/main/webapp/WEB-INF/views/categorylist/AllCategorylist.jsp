@@ -12,8 +12,9 @@
 <link href="../vendor/css/bootstrap-table.min.css" rel="stylesheet"/>
 <script src="../vendor/js/bootstrap-table.min.js" type="text/javascript"></script>
 <script src="../vendor/js/bootstrap-table-zh-CN.min.js" type="text/javascript"></script>
-<script src="../vendor/js/bootstrapValidator.min.js" rel="stylesheet"></script>
+<script src="../vendor/js/bootstrapValidator.min.js" type="text/javascript"></script>
 <link href="../vendor/css/bootstrapValidator.min.css" rel="stylesheet"/>
+<script src="../vendor/js/bootstrap3-typeahead.min.js" type="text/javascript"></script>
 
 <div class="container">
     <div class="panel panel-default">
@@ -82,21 +83,26 @@
                 <div class="modal-body">
                     <form class="form" id="add_form">
                         <div class="form-group">
-                            <select class="form-control" id="add_select_level" name="add_select_level" required>
+                            <select class="form-control" id="add_select_level" onchange="changelevel(event)" name="add_select_level" required>
                                 <option value="1">一级</option>
                                 <option value="2">二级</option>
                             </select>
                         </div>
 
+
+                        <div id="add_parent_formgroup" class="form-group hide">
+                            <br/>
+                            <label class="control-label">输入一级名称</label>
+                            <input id="add_parent_code" class="form-control" name="add_parent_code" data-provide="typeahead" data-items="4" onchange="validateparent()"/>
+                        </div>
+
                         <%--<label for="add_code" class="control-label">编码:</label>--%>
-                        <br/>
                         <br/>
                         <div class="form-group">
                             <input id="add_code" class="form-control" type='text' name="add_code" placeholder="编码"
                                    required/>
                         </div>
 
-                        <br/>
                         <br/>
                         <div class="form-group">
                             <input id="add_name" class="form-control" type='text' name="add_name" placeholder="名称"
@@ -211,6 +217,17 @@
                         message: '名称长度必须在64位以内'
                     }
                 }
+            },
+            add_parent_code:{
+                validators:{
+                    callback:{
+                        message: "一级名称必须已存在",
+                        callback : function(value, validator, $field) {
+                            console.log('这是一级名称:' + value);
+                            return parentCodeAndName.indexOf(value) >= 0;
+                        }
+                    }
+                }
             }
         }
     });
@@ -263,6 +280,45 @@
     $('#add_name').focus(function () {
         $('#submit_alert').addClass('hide');
         $('#submit_failed_alert').addClass('hide');
+    });
+
+    var parentCodeAndName = []
+    $.ajax({
+        type: "GET",
+        url: "${pageContext.request.contextPath}/categorylist/firstlevel",
+        contentType: "application/json",
+        success: function (data) {
+            if(null != data) {
+
+                data.forEach(function(obj, index){
+                    parentCodeAndName.push(obj.code + '-' + obj.name);
+                })
+
+            }
+        },
+        error: function (xhr) {
+            console.log('failed');
+        }
     })
+    var initializeParents = function () {
+        $('#add_parent_code').typeahead({source: parentCodeAndName})
+    };
+
+    var changelevel = function (event) {
+        var level = $('#add_select_level').val();
+        if(level == 1) {
+            $('#add_parent_formgroup').addClass('hide');
+        } else {
+            $('#add_parent_formgroup').removeClass('hide');
+        }
+    }
+
+    initializeParents();
+
+    var validateparent = function() {
+        //重新校验输入框之前，需要将其状态置为NOT_VALIDATED
+        $('#add_form').data("bootstrapValidator").updateStatus('add_parent_code', 'NOT_VALIDATED')
+            .validateField('add_parent_code');
+    }
 
 </script>
