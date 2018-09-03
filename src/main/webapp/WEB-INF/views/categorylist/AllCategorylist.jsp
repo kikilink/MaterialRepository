@@ -83,7 +83,8 @@
                 <div class="modal-body">
                     <form class="form" id="add_form">
                         <div class="form-group">
-                            <select class="form-control" id="add_select_level" onchange="changelevel(event)" name="add_select_level" required>
+                            <select class="form-control" id="add_select_level"
+                                    name="add_select_level" required>
                                 <option value="1">一级</option>
                                 <option value="2">二级</option>
                             </select>
@@ -93,7 +94,8 @@
                         <div id="add_parent_formgroup" class="form-group hide">
                             <br/>
                             <label class="control-label">输入一级名称</label>
-                            <input id="add_parent_code" class="form-control" name="add_parent_code" data-provide="typeahead" data-items="4" onchange="validateparent()"/>
+                            <input id="add_parent_code" class="form-control" name="add_parent_code"
+                                   data-provide="typeahead" data-items="4" />
                         </div>
 
                         <%--<label for="add_code" class="control-label">编码:</label>--%>
@@ -139,109 +141,40 @@
 
 
 <script type="text/javascript">
-    function queryParams(params) {
+    function Category(parentCodeAndName, allCodes) {
+        this.parentCodeAndName = parentCodeAndName;
+        this.allCodes = allCodes;
+    }
+
+    Category.prototype.queryParams = function queryParams(params) {
         console.log('parameter:' + params);
         return {
             pageSize: params.limit,
             pageIndex: params.pageNumber
         }
     }
-
-    $('#category_table').bootstrapTable({
-        method: 'post',
-        contentType: "application/x-www-form-urlencoded",
-        url: "/categorylist/page",
-        striped: true, //是否显示行间隔色
-        dataField: "res",
-        pageNumber: 1, //初始化加载第一页，默认第一页
-        pagination: true,//是否分页
-        queryParamsType: 'limit',
-        queryParams: queryParams,
-        sidePagination: 'server',
-        pageSize: 10,//单页记录数
-        pageList: [5, 10, 20, 30],//分页步进值
-        showRefresh: false,//刷新按钮
-        showColumns: false,
-        clickToSelect: true,//是否启用点击选中行
-        toolbarAlign: 'left',
-        buttonsAlign: 'left',//按钮对齐方式
-        toolbar: '#toolbar',//指定工作栏
-        locale: 'zh-CN'//中文支持,
-    });
-
-    /**
-     * 重置查询条件
-     */
-    $('#btn_reset').click(function () {
-        $('#query_condition input').val('');
-        $('#query_condition select').val(0);
-    });
-
-    /**
-     * 表单校验
-     */
-    $('#add_form').bootstrapValidator({
-        live: 'enabled',
-        message: '输入的值不规范',
-        feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            add_code: {
-                message: '编码不符合规范',
-                validators: {
-                    notEmpty: {
-                        message: '编码不能为空'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 64,
-                        message: '编码长度必须在64位以内'
-                    },
-                    regexp: {
-                        regexp: /^[0-9]+$/,
-                        message: '编码只能是数字'
-                    },
-                    callback:{
-                        message:"编码已存在",
-                        callback:function (value, validator, $field) {
-                            return allCodes.indexOf(parseInt(value)) < 0;
-                        }
-                    }
-                }
-            },
-            add_name: {
-                validators: {
-                    notEmpty: {
-                        message: '名称不能为空'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 64,
-                        message: '名称长度必须在64位以内'
-                    }
-                }
-            },
-            add_parent_code:{
-                validators:{
-                    callback:{
-                        message: "一级名称必须已存在",
-                        callback : function(value, validator, $field) {
-                            console.log('这是一级名称:' + value);
-                            return parentCodeAndName.indexOf(value) >= 0;
-                        }
-                    }
-                }
-            }
+    Category.prototype.resetModal = function () {
+        $('#add_form').data('bootstrapValidator').resetForm(true);
+    }
+    Category.prototype.changelevel = function (event) {
+        var level = $('#add_select_level').val();
+        if (level == 1) {
+            $('#add_parent_formgroup').addClass('hide');
+        } else {
+            $('#add_parent_formgroup').removeClass('hide');
         }
-    });
+    }
+    Category.prototype.validateparent = function () {
+        //重新校验输入框之前，需要将其状态置为NOT_VALIDATED
+        $('#add_form').data("bootstrapValidator").updateStatus('add_parent_code', 'NOT_VALIDATED')
+            .validateField('add_parent_code');
+    }
 
-    /**
-     * 提交前做校验
-     */
-    $('#add_name_submit').click(function () {
+    Category.prototype.initializeParents = function () {
+        $('#add_parent_code').typeahead({source: this.parentCodeAndName})
+    };
+
+    Category.prototype.submit = function () {
         if (!$('#add_form').data('bootstrapValidator').isValid()) {
             $('#submit_alert').removeClass('hide');
             return;
@@ -254,82 +187,166 @@
                 level: $('#add_select_level').val(),
                 code: $('#add_code').val(),
                 name: $('#add_name').val(),
-                parentCode:$('#add_parent_code').val().split('-')[0]
+                parentCode: $('#add_parent_code').val().split('-')[0]
             }),
             success: function (resp) {
                 $('#add_modal').modal('hide');
-                resetModal();
+                category.resetModal();
             },
             error: function (xhr) {
                 console.log('failed');
                 $('#submit_failed_alert').removeClass('hide');
             }
         })
-    });
-
-
-    var resetModal = function () {
-        $('#add_form').data('bootstrapValidator').resetForm(true);
     }
 
-    /**
-     * 用户开始输入，去掉警告
-     */
-    $('#add_code').focus(function () {
-        $('#submit_alert').addClass('hide');
-        $('#submit_failed_alert').addClass('hide');
 
-    });
+    $(document).ready(function(){
+        var parentCodeAndName = [];
+        var allCodes = [];
+        $.ajax({
+            type: "GET",
+            url: "${pageContext.request.contextPath}/categorylist/allcategory",
+            contentType: "application/json",
+            success: function (data) {
+                if (null != data) {
 
-    /**
-     * 用户开始输入，去掉警告
-     */
-    $('#add_name').focus(function () {
-        $('#submit_alert').addClass('hide');
-        $('#submit_failed_alert').addClass('hide');
-    });
+                    data.forEach(function (obj, index) {
+                        if (obj.level == 1) {
+                            parentCodeAndName.push(obj.code + '-' + obj.name);
+                        }
+                        allCodes.push(obj.code);
+                    })
 
-    var parentCodeAndName = [];
-    var allCodes = [];
-    $.ajax({
-        type: "GET",
-        url: "${pageContext.request.contextPath}/categorylist/allcategory",
-        contentType: "application/json",
-        success: function (data) {
-            if(null != data) {
-
-                data.forEach(function(obj, index){
-                    if(obj.level == 1) {
-                        parentCodeAndName.push(obj.code + '-' + obj.name);
-                    }
-                    allCodes.push(obj.code);
-                })
-
+                }
+            },
+            error: function (xhr) {
+                console.log('failed');
             }
-        },
-        error: function (xhr) {
-            console.log('failed');
-        }
-    })
-    var initializeParents = function () {
-        $('#add_parent_code').typeahead({source: parentCodeAndName})
-    };
+        });
 
-    var changelevel = function (event) {
-        var level = $('#add_select_level').val();
-        if(level == 1) {
-            $('#add_parent_formgroup').addClass('hide');
-        } else {
-            $('#add_parent_formgroup').removeClass('hide');
-        }
-    }
+        var category = new Category(parentCodeAndName, allCodes);
+        category.initializeParents();
 
-    initializeParents();
+        $('#category_table').bootstrapTable({
+            method: 'post',
+            contentType: "application/x-www-form-urlencoded",
+            url: "/categorylist/page",
+            striped: true, //是否显示行间隔色
+            dataField: "res",
+            pageNumber: 1, //初始化加载第一页，默认第一页
+            pagination: true,//是否分页
+            queryParamsType: 'limit',
+            queryParams: category.queryParams,
+            sidePagination: 'server',
+            pageSize: 10,//单页记录数
+            pageList: [5, 10, 20, 30],//分页步进值
+            showRefresh: false,//刷新按钮
+            showColumns: false,
+            clickToSelect: true,//是否启用点击选中行
+            toolbarAlign: 'left',
+            buttonsAlign: 'left',//按钮对齐方式
+            toolbar: '#toolbar',//指定工作栏
+            locale: 'zh-CN'//中文支持,
+        });
 
-    var validateparent = function() {
-        //重新校验输入框之前，需要将其状态置为NOT_VALIDATED
-        $('#add_form').data("bootstrapValidator").updateStatus('add_parent_code', 'NOT_VALIDATED')
-            .validateField('add_parent_code');
-    }
+        /**
+         * 表单校验
+         */
+        $('#add_form').bootstrapValidator({
+            live: 'enabled',
+            message: '输入的值不规范',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                add_code: {
+                    message: '编码不符合规范',
+                    validators: {
+                        notEmpty: {
+                            message: '编码不能为空'
+                        },
+                        stringLength: {
+                            min: 0,
+                            max: 64,
+                            message: '编码长度必须在64位以内'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '编码只能是数字'
+                        },
+                        callback: {
+                            message: "编码已存在",
+                            callback: function (value, validator, $field) {
+                                return category.allCodes.indexOf(parseInt(value)) < 0;
+                            }
+                        }
+                    }
+                },
+                add_name: {
+                    validators: {
+                        notEmpty: {
+                            message: '名称不能为空'
+                        },
+                        stringLength: {
+                            min: 0,
+                            max: 64,
+                            message: '名称长度必须在64位以内'
+                        }
+                    }
+                },
+                add_parent_code: {
+                    validators: {
+                        callback: {
+                            message: "一级名称必须已存在",
+                            callback: function (value, validator, $field) {
+                                console.log('这是一级名称:' + value);
+                                return category.parentCodeAndName.indexOf(value) >= 0;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        //绑定事件开始
+        /**
+         * 重置查询条件
+         */
+        $('#btn_reset').click(function () {
+            $('#query_condition input').val('');
+            $('#query_condition select').val(0);
+        });
+
+        /**
+         * 提交保存
+         */
+        $('#add_name_submit').click(category.submit);
+
+        /**
+         * 用户开始输入，去掉警告
+         */
+        $('#add_code').focus(function () {
+            $('#submit_alert').addClass('hide');
+            $('#submit_failed_alert').addClass('hide');
+
+        });
+
+        /**
+         * 用户开始输入，去掉警告
+         */
+        $('#add_name').focus(function () {
+            $('#submit_alert').addClass('hide');
+            $('#submit_failed_alert').addClass('hide');
+        });
+
+        $('#add_parent_code').change(category.validateparent);
+
+        $('#add_select_level').change(category.changelevel);
+
+
+    });
 
 </script>
