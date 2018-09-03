@@ -153,9 +153,6 @@
             pageIndex: params.pageNumber
         }
     }
-    Category.prototype.resetModal = function () {
-        $('#add_form').data('bootstrapValidator').resetForm(true);
-    }
     Category.prototype.changelevel = function (event) {
         var level = $('#add_select_level').val();
         if (level == 1) {
@@ -179,6 +176,7 @@
             $('#submit_alert').removeClass('hide');
             return;
         }
+        var that = this;
         $.ajax({
             type: "POST",
             url: "${pageContext.request.contextPath}/categorylist",
@@ -191,7 +189,7 @@
             }),
             success: function (resp) {
                 $('#add_modal').modal('hide');
-                category.resetModal();
+                $('#add_form').data('bootstrapValidator').resetForm(true);
             },
             error: function (xhr) {
                 console.log('failed');
@@ -228,6 +226,7 @@
         var category = new Category(parentCodeAndName, allCodes);
         category.initializeParents();
 
+        //初始化表格
         $('#category_table').bootstrapTable({
             method: 'post',
             contentType: "application/x-www-form-urlencoded",
